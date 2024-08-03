@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Review Form</title>
+</head>
+<body>
+    <h2>Leave a Review</h2>
+    <form id="reviewForm">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="rating">Rating:</label><br>
+        <select id="rating" name="rating">
+            <option value="1">1 Star</option>
+            <option value="2">2 Stars</option>
+            <option value="3">3 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="5">5 Stars</option>
+        </select><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        document.getElementById('reviewForm').onsubmit = function(event) {
+            event.preventDefault();
+
+            let name = document.getElementById('name').value;
+            let email = document.getElementById('email').value;
+            let rating = document.getElementById('rating').value;
+            
+            let comment;
+            switch (rating) {
+                case '1':
+                    comment = "Sorry to hear you had a bad experience.";
+                    break;
+                case '2':
+                    comment = "We'll strive to do better next time.";
+                    break;
+                case '3':
+                    comment = "Thank you for your feedback!";
+                    break;
+                case '4':
+                    comment = "Glad you had a good experience!";
+                    break;
+                case '5':
+                    comment = "Thank you for the excellent rating!";
+                    break;
+            }
+
+            let review = {
+                name: name,
+                email: email,
+                rating: rating,
+                comment: comment
+            };
+
+            fetch('http://localhost:5000/submit_review', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(review)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Review submitted successfully!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        };
+    </script>
+</body>
+</html>
